@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import './assets/css/tailwind.css'
 
+// prettier-ignore
 createApp(App)
 	.use(router)
 	.use(store)
