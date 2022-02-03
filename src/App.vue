@@ -1,22 +1,38 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vite" />
+  <div class="container">
+    <nav>
+      <router-link to="/dashboard">Dashboard</router-link>
+      <router-link v-if="!authenticated" to="/login">Login</router-link>
+      <router-link v-if="!authenticated" to="/register">Register</router-link>
+      <button v-if="authenticated" @click="handleSignOut">Sign Out</button>
+    </nav>
+    <router-view />
+  </div>
 </template>
 
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, onMounted } from 'vue'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { handleSignOut } from './firebase'
 
-// This starter template is using Vue 3 experimental <script setup> SFCs
-// Check out https://github.com/vuejs/rfcs/blob/master/active-rfcs/0040-script-setup.md
+const authenticated = ref(false)
+
+onMounted(() => {
+  onAuthStateChanged(getAuth(), user => {
+    if (user) authenticated.value = true
+    else authenticated.value = false
+  })
+})
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+.container {
+  margin: 20px;
+}
+nav {
+  display: flex;
+}
+nav > * + * {
+  margin-left: 20px;
 }
 </style>
